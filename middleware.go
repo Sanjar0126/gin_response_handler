@@ -11,7 +11,7 @@ import (
 
 const (
 	responseMessage = "%s %s %s\nResponse: %s"
-	requestMessage  = "%s\\nRequest: %s\""
+	requestMessage  = "%s\nRequest: %s"
 	telegramMessage = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=Markdown&text=%s"
 )
 
