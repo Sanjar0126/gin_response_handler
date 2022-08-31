@@ -1,1 +1,1 @@
-# gin_response_handler
+go get -u github.com/Sanjar0126/gin_response_handler
