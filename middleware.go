@@ -9,12 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const (
-	responseMessage = "%s %s %s\nResponse: %s"
-	requestMessage  = "%s\nRequest: %s"
-	telegramMessage = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=Markdown&text=%s"
-)
-
 type bodyWriter struct {
 	gin.ResponseWriter
 	body *bytes.Buffer
@@ -49,10 +43,12 @@ func (args *Middleware) ginResponseMiddleware(c *gin.Context) {
 	reqBody, _ := ioutil.ReadAll(c.Request.Body)
 
 	if statusCode >= http.StatusBadRequest {
-		msg := fmt.Sprintf(responseMessage, method, path, proto, bw.body.String())
+		msg := fmt.Sprintf("%s%%20%s%%20%s%%0AResponse:%%20%s",
+			method, path, proto, bw.body.String())
 
 		if len(reqBody) > 0 {
-			msg = fmt.Sprintf(requestMessage, msg, string(reqBody))
+			rmsg := fmt.Sprintf("%s%%0ARequest:%%20%s", msg, string(reqBody))
+			msg = rmsg
 		}
 
 		args.sendTelegram(msg)
@@ -60,5 +56,8 @@ func (args *Middleware) ginResponseMiddleware(c *gin.Context) {
 }
 
 func (args *Middleware) sendTelegram(msg string) {
-	_, _ = http.Get(fmt.Sprintf(telegramMessage, args.TelegramBotId, args.TelegramChatId, msg))
+	url := fmt.Sprintf(
+		"https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=Markdown&text=%s",
+		args.TelegramBotId, args.TelegramChatId, msg)
+	_, _ = http.Get(url)
 }
