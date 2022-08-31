@@ -43,8 +43,8 @@ func (args *Middleware) ginResponseMiddleware(c *gin.Context) {
 	reqBody, _ := ioutil.ReadAll(c.Request.Body)
 
 	if statusCode >= http.StatusBadRequest {
-		msg := fmt.Sprintf("%s%%20%s%%20%s%%0AResponse:%%20%s",
-			method, path, proto, bw.body.String())
+		msg := fmt.Sprintf("%s%%20%d%%20%s%%20%s%%0AResponse:%%20%s",
+			method, statusCode, path, proto, bw.body.String())
 
 		if len(reqBody) > 0 {
 			rmsg := fmt.Sprintf("%s%%0ARequest:%%20%s", msg, string(reqBody))
